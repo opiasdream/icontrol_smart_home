@@ -12,6 +12,6 @@ _This project is an example and only tested on local server._
 
 - <a href= "https://mosquitto.org/">Eclipse Mosquitto</a> was used for the broker.
 
-- `Flutter` was used for mobile application. [Details]('icontrol/README.md')
+- `Flutter` was used for mobile application. [Details](icontrol/README.md)
 
 <a href= "https://mosquitto.org/">Eclipse Mosquitto</a>
