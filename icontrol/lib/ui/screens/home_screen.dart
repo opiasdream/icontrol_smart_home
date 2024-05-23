@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:icontrol/common/constants/paths.dart';
 import 'package:icontrol/common/constants/strings.dart';
 import 'package:icontrol/common/constants/dimens.dart';
 import 'package:icontrol/common/constants/text_styles.dart';
@@ -27,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> with HomeScreenMixin {
         child: ListView(
           padding: const EdgeInsets.all(kDefaultPadding),
           children: [
-            Text(appName, style: TextStyles.appName),
+            titleWidget(),
             const SizedBox(height: kDefaultPadding),
             buildRoomListWidget(),
             const SizedBox(height: kDefaultPadding),
@@ -35,6 +36,16 @@ class _HomeScreenState extends State<HomeScreen> with HomeScreenMixin {
           ],
         ),
       )),
+    );
+  }
+
+  Widget titleWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(appName, style: TextStyles.appName),
+        Image.asset(appIconPath, height: 48, color: Colors.black),
+      ],
     );
   }
 
