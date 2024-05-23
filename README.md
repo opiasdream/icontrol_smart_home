@@ -14,4 +14,3 @@ _This project is an example and only tested on local server._
 
 - `Flutter` was used for mobile application. [Details](icontrol/README.md)
 
-<a href= "https://mosquitto.org/">Eclipse Mosquitto</a>
