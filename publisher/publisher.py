@@ -19,7 +19,7 @@ publisherRuntimeDelay = 0.25
 # delay between publishing messages (keep alive time)
 publisherPublishDelay = 3
 
-# mqtt broker
+# mqtt broker hosting address
 hosting = '127.0.0.1' # localhost
 # mqtt port
 port = 1883
@@ -45,12 +45,12 @@ class PublisherThread(threading.Thread):
         # mqtt client
         self.client = mqtt.Client(client_id= id)
     
-    # when client is connected to broker this function will be called.
-    def _on_connect(self, client, userdata, flags, rc): return None
+    """When client is connected to broker this function will be called."""
+    #def _on_connect(self, client, userdata, flags, rc): return None
     #print(f"{self.id}: Connected with result code {rc}.")
 
-    # when client publish message to broker this function will be called.
-    def _on_publish(self, client, userdata, mid): return None
+    """When client publish message to broker this function will be called."""
+    #def _on_publish(self, client, userdata, mid): return None
     #print(f"{self.id}: Message published.")
 
     # when client receive message from broker this function will be called.
@@ -65,8 +65,10 @@ class PublisherThread(threading.Thread):
             self.topic = message
 
     def run(self):
-        self.client.on_connect = self._on_connect
-        self.client.on_publish = self._on_publish
+        #self.client.on_connect = self._on_connect
+        #self.client.on_publish = self._on_publish
+        
+        # set callbacks
         self.client.on_message = self._on_message
         # connect to broker
         self.client.connect(hosting, port)
@@ -89,7 +91,7 @@ class PublisherThread(threading.Thread):
                 
             time.sleep(4)
             self.client.loop()
-    
+
     def print_log(self, data:str):
         print("┌───────────────────────────────────────────────────────┐")
         print(f"| {self.id} | Status: {self.status} | Data: {data} \t\t|")
