@@ -44,7 +44,24 @@ class PublisherThread(threading.Thread):
 
         # mqtt client
         self.client = mqtt.Client(client_id= id)
+
+    def run(self):
+        #self.client.on_connect = self._on_connect
+        #self.client.on_publish = self._on_publish
+
+        # set callbacks
+        self.client.on_message = self._on_message
+        # connect to broker
+        self.client.connect(hosting, port)
+        # subscribe to re/<publisher_id> topic for change `self.status` value.
+        self.client.subscribe('re/' + self.id)
+
+        while True:
+            self.send_message()
+            time.sleep(publisherPublishDelay)
+            self.client.loop()
     
+        
     """When client is connected to broker this function will be called."""
     #def _on_connect(self, client, userdata, flags, rc): return None
     #print(f"{self.id}: Connected with result code {rc}.")
@@ -63,34 +80,22 @@ class PublisherThread(threading.Thread):
             self.status = message
         elif control == "change topic":
             self.topic = message
-
-    def run(self):
-        #self.client.on_connect = self._on_connect
-        #self.client.on_publish = self._on_publish
         
-        # set callbacks
-        self.client.on_message = self._on_message
-        # connect to broker
-        self.client.connect(hosting, port)
-        # subscribe to re/<publisher_id> topic for change `self.status` value.
-        self.client.subscribe('re/' + self.id)
+        self.send_message()
 
-        while True:
-            try:
-                if self.status == SensorStatus.ACTIVE.value and self.type != SensorType.DEVICE:
-                    data = generate_random_value(self.type)
-                else:
-                    data = self.status
+    def send_message(self):
+        try:
+            if self.status == SensorStatus.ACTIVE.value and self.type != SensorType.DEVICE:
+                data = generate_random_value(self.type)
+            else:
+                data = self.status
 
-                self.message = json.dumps({"status" : self.status, "data":  data})
-                self.client.publish(self.topic, self.message)
-                self.print_log(data)
+            self.message = json.dumps({"status" : self.status, "data":  data})
+            self.client.publish(self.topic, self.message)
+            self.print_log(data)
 
-            except Exception as e:
-                print(f"{self.id}: Message is not published. Error: {e}")
-                
-            time.sleep(4)
-            self.client.loop()
+        except Exception as e:
+            print(f"{self.id}: Message is not published. Error: {e}")
 
     def print_log(self, data:str):
         print("┌───────────────────────────────────────────────────────┐")

@@ -11,17 +11,14 @@ class MQTTRepository extends ChangeNotifier {
 
   static final MQTTRepository instance = MQTTRepository._();
 
-  Map<String, PublisherData> publishers = {};
-
   static final _service = IMQTTService.instance;
+
+  Map<String, PublisherData> publishers = {};
 
   void init() {
     _service.client.updates!
         .listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
-      // topic
       final List<String> topic = c![0].topic.split('/');
-
-      // topic: home/<room_id>/<sensor_id> or home/<sensor_id>
 
       final recMess = c[0].payload as MqttPublishMessage;
 
@@ -41,22 +38,25 @@ class MQTTRepository extends ChangeNotifier {
     });
   }
 
-  void changeRoom(String roomID, String sensorID) {
-    final topic =
+  void changeRoom(String sensorID, String roomID) {
+    final newTopic =
         roomID.isNotEmpty ? "home/$roomID/$sensorID" : "home/$sensorID";
-    _service.changeTopic(topic, sensorID);
+
+    final message = "change topic:$newTopic";
+
+    _service.sendMessage(sensorID, message);
   }
 
   void changeStatus(String sensorID, SensorStatus status) {
-    _service.changeStatus(sensorID, status.name);
+    final message = 'change status:${status.name}';
+
+    _service.sendMessage(sensorID, message);
   }
 
-  List<PublisherData> getUncategorizedPublishers() {
-    return publishers.values
-        .where((publisher) =>
-            RoomRepository.instance.rooms
-                .any((room) => room.id == publisher.room) !=
-            true)
-        .toList();
-  }
+  List<PublisherData> getUncategorizedPublishers() => publishers.values
+      .where((publisher) =>
+          RoomRepository.instance.rooms
+              .any((room) => room.id == publisher.room) !=
+          true)
+      .toList();
 }

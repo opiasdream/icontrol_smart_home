@@ -115,7 +115,7 @@ class AddPublisherToRoomDialog extends StatelessWidget {
                     return InkWell(
                         onTap: () {
                           MQTTRepository.instance
-                              .changeRoom(roomId, publisher.id);
+                              .changeRoom(publisher.id, roomId);
                           Navigator.pop(context);
                         },
                         child: SensorListTile(publisher: publisher));

@@ -30,7 +30,7 @@ class PublisherPopup extends StatelessWidget {
         } else if (value == 2) {
           final roomId = await RoomPicker.show(context);
           if (roomId != null) {
-            MQTTRepository.instance.changeRoom(roomId, publisherId);
+            MQTTRepository.instance.changeRoom(publisherId, roomId);
           }
         }
       },

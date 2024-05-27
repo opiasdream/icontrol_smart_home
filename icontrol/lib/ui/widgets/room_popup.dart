@@ -26,7 +26,7 @@ class RoomPopup extends StatelessWidget {
           RoomRepository.instance.remove(room.id);
           MQTTRepository.instance.publishers.values
               .where((e) => e.room == room.id)
-              .forEach((e) => MQTTRepository.instance.changeRoom('', e.id));
+              .forEach((e) => MQTTRepository.instance.changeRoom(e.id, ''));
           Navigator.pop(context);
         }
       },
